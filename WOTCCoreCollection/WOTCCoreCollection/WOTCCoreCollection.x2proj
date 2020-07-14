@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Guid>8a250e98-8360-4364-91c3-9936aaf83cae</Guid>
+    <Name>WOTCCoreCollection</Name>
+    <Description>This meta mod contains various compatibility fixes for the mods in the Core Collection.
+
+tags= war of the chosen</Description>
+    <SteamPublishID>0</SteamPublishID>
+    <AssemblyName>WOTCCoreCollection</AssemblyName>
+    <RootNamespace>WOTCCoreCollection</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Localization\" />
+    <Folder Include="Src\" />
+    <Folder Include="Src\WOTCCoreCollection\" />
+    <Folder Include="Src\WOTCCoreCollection\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
+    <Content Include="ModPreview.jpg" />
+    <Content Include="Config\XComEditor.ini" />
+    <Content Include="Config\XComEngine.ini" />
+    <Content Include="Config\XComGame.ini" />
+    <Content Include="Localization\XComGame.int" />
+    <Content Include="Src\WOTCCoreCollection\Classes\X2DownloadableContentInfo_WOTCCoreCollection.uc" />
+  </ItemGroup>
+  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+</Project>
