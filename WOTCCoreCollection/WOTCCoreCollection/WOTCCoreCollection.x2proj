@@ -14,13 +14,14 @@ tags= war of the chosen</Description>
     <Folder Include="Config\" />
     <Folder Include="Localization\" />
     <Folder Include="Src\" />
-    <Folder Include="Src\LW_Tuple" />
-    <Folder Include="Src\LW_Tuple\Classes" />
     <Folder Include="Src\WOTCCoreCollection\" />
     <Folder Include="Src\WOTCCoreCollection\Classes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\XComCoreCollection.ini">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\WOTC_DisplayHitChance.cht">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ReadMe.txt" />
@@ -29,13 +30,7 @@ tags= war of the chosen</Description>
     <Content Include="Config\XComEngine.ini" />
     <Content Include="Config\XComGame.ini" />
     <Content Include="Localization\XComGame.int" />
-    <Content Include="Src\LW_Tuple\Classes\LWTuple.uc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Src\WOTCCoreCollection\Classes\X2DownloadableContentInfo_WOTCCoreCollection.uc" />
-    <Content Include="Src\WOTCCoreCollection\Classes\X2EventListener_CCMM.uc">
-      <SubType>Content</SubType>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
 </Project>
