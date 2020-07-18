@@ -22,6 +22,9 @@ tags= war of the chosen</Description>
     <Content Include="Config\XComCoreCollection.ini">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Config\XComUIModificationWOTC.ini">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Content\IRI_CC_OverwatchAll.upk">
       <SubType>Content</SubType>
     </Content>
