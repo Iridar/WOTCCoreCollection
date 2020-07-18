@@ -28,6 +28,9 @@ tags= war of the chosen</Description>
     <Content Include="Content\IRI_CC_OverwatchAll.upk">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Localization\RemoveWeaponUpgradesWOTC.cht">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Localization\WOTC_DisplayHitChance.cht">
       <SubType>Content</SubType>
     </Content>

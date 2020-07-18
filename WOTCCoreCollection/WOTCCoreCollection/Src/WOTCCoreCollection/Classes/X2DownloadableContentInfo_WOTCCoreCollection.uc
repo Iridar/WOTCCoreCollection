@@ -79,3 +79,21 @@ static function PatchOverwatchAllMod()
 	}
 	// End Issue #4
 }
+
+// Start Issue #6
+static function OnPreCreateTemplates()
+{
+	local Engine	LocalEngine;
+	local int		Index;
+
+	LocalEngine = class'Engine'.static.GetEngine();
+
+	for (Index = LocalEngine.ModClassOverrides.Length - 1; Index >= 0; Index--)
+	{
+		if (LocalEngine.ModClassOverrides[Index].ModClass == 'XComPathingPawn_GA')
+		{
+			LocalEngine.ModClassOverrides[Index].ModClass = 'XComPathingPawn_PeekFix';
+		}
+	}
+}
+// End Issue #6
