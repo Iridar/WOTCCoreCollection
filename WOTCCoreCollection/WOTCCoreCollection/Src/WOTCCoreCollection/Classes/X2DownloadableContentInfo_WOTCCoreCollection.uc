@@ -9,12 +9,14 @@ static event OnPostTemplatesCreated()
 	PatchOverwatchAllMod();	
 
 	// Issue #8
-	ModifyTemplateAllDiff('ConstantHighCover', class'X2AbilityTemplate', PatchTurretsCoverAbility);
-	ModifyTemplateAllDiff('ConstantLowCover', class'X2AbilityTemplate', PatchTurretsCoverAbility);
+	ModifyTemplateAllDiff('ConstantHighCover', class'X2AbilityTemplate', PatchCoverGenerationAbility);
+	ModifyTemplateAllDiff('ConstantLowCover', class'X2AbilityTemplate', PatchCoverGenerationAbility);
+	ModifyTemplateAllDiff('Bulwark', class'X2AbilityTemplate', PatchCoverGenerationAbility);
+	ModifyTemplateAllDiff('HighCoverGenerator', class'X2AbilityTemplate', PatchCoverGenerationAbility);
 }
 
 // Begin Issue #8
-static function PatchTurretsCoverAbility(X2DataTemplate DataTemplate)
+static function PatchCoverGenerationAbility(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate			Template;
 	local X2Effect					Effect;
@@ -25,16 +27,30 @@ static function PatchTurretsCoverAbility(X2DataTemplate DataTemplate)
 	foreach Template.AbilityShooterEffects(Effect)
 	{
 		GenerateCover = X2Effect_GenerateCover(Effect);
-		if (GenerateCover != none)
+		if (GenerateCover != none && GenerateCover.EffectRemovedFn == none)
+		{
+			//	Interestingly, this doesn't prevent the cover bonus from disappearing if it dies normally.
+			//	Duuh, this doesn't remove the bonus, it relocates it to the new unit's position.
+			//	Thankfully, this doesn't cause cover to appear where the turret supposedly fell.
+			//	Or maybe it does, but the turret falls all the way to Narnia, so we just never know.
+			GenerateCover.bRemoveWhenTargetDies = true;
+			GenerateCover.bRemoveWhenSourceDies = true;
+			GenerateCover.EffectRemovedFn = CoverGeneratorEffectRemoved;
+		}
+	}
+	foreach Template.AbilityTargetEffects(Effect)
+	{
+		GenerateCover = X2Effect_GenerateCover(Effect);
+		if (GenerateCover != none && GenerateCover.EffectRemovedFn == none)
 		{
 			GenerateCover.bRemoveWhenTargetDies = true;
 			GenerateCover.bRemoveWhenSourceDies = true;
-			GenerateCover.EffectRemovedFn = TurretCoverEffectRemoved;
+			GenerateCover.EffectRemovedFn = CoverGeneratorEffectRemoved;
 		}
 	}
 }
 
-static function TurretCoverEffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)
+static function CoverGeneratorEffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)
 {
 	local XComGameState_Unit UnitState;
 
@@ -56,7 +72,7 @@ static function PatchOverwatchAllMod()
 
 	// Begin Issue #1
 	ModifyTemplateAllDiff('OverwatchOthers', class'X2AbilityTemplate', PatchOverwatchOthersAbilityTemplate);
-	ModifyTemplateAllDiff('OverwatchOthers', class'X2AbilityTemplate', PatchOverwatchAllAbilityTemplate);
+	ModifyTemplateAllDiff('OverwatchAll', class'X2AbilityTemplate', PatchOverwatchAllAbilityTemplate);
 	// End Issue #1
 
 	// Begin Issue #4
