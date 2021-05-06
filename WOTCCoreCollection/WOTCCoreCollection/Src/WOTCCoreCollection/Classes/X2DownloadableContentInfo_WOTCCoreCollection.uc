@@ -181,7 +181,7 @@ static function bool GetValidFloorSpawnLocations(out array<Vector> FloorPoints, 
 		return false;
 
 	// Increase spawn zone if it is needed, but has not been done already.
-	if (class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission(MissionSite) > 9 &&
+	if (class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission(MissionSite) > 6 &&
 		class'CHHelpers'.default.SPAWN_EXTRA_TILE == 0 &&
 		SpawnSizeOverride <= 0)
 	{
