@@ -145,24 +145,54 @@ static function PatchOverwatchAllAbilityTemplate(X2DataTemplate DataTemplate)
 // End Issue #1
 
 // Start Issue #6
-static function OnPreCreateTemplates()
-{
-	local Engine	LocalEngine;
-	local int		Index;
-
-	LocalEngine = class'Engine'.static.GetEngine();
-
-	for (Index = LocalEngine.ModClassOverrides.Length - 1; Index >= 0; Index--)
-	{
-		if (LocalEngine.ModClassOverrides[Index].ModClass == 'XComPathingPawn_GA')
-		{
-			LocalEngine.ModClassOverrides[Index].ModClass = 'XComPathingPawn_PeekFix';
-		}
-	}
-}
+// Disabled by Issue #11
+//static function OnPreCreateTemplates()
+//{
+//	local Engine	LocalEngine;
+//	local int		Index;
+//
+//	LocalEngine = class'Engine'.static.GetEngine();
+//
+//	for (Index = LocalEngine.ModClassOverrides.Length - 1; Index >= 0; Index--)
+//	{
+//		if (LocalEngine.ModClassOverrides[Index].ModClass == 'XComPathingPawn_GA')
+//		{
+//			LocalEngine.ModClassOverrides[Index].ModClass = 'XComPathingPawn_PeekFix';
+//		}
+//	}
+//}
+// End of Disabled by Issue #11
 // End Issue #6
 
-//	--------------------------------------------------------------------------
+// Start Issue #12
+static function bool GetValidFloorSpawnLocations(out array<Vector> FloorPoints, float SpawnSizeOverride, XComGroupSpawn SpawnPoint)
+{
+	local XComGameState_MissionSite	MissionSite;
+	local XComGameState_BattleData	BattleData;
+	local XComGameStateHistory		History;
+
+	History = `XCOMHISTORY;
+	BattleData = XComGameState_BattleData(History.GetSingleGameStateObjectForClass(class'XComGameState_BattleData', true));
+	if (BattleData == none)
+		return false;
+
+	MissionSite = XComGameState_MissionSite(History.GetGameStateForObjectID(BattleData.m_iMissionID));
+	if (MissionSite == none)
+		return false;
+
+	// Increase spawn zone if it is needed, but has not been done already.
+	if (class'X2StrategyGameRulesetDataStructures'.static.GetMaxSoldiersAllowedOnMission(MissionSite) > 9 &&
+		class'CHHelpers'.default.SPAWN_EXTRA_TILE == 0 &&
+		SpawnSizeOverride <= 0)
+	{
+		class'CHHelpers'.default.SPAWN_EXTRA_TILE = 1;
+	}
+	return false;
+}
+// End Issue #12
+
+//	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+//	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	HELPER FUNCTIONS
 static private function IterateTemplatesAllDiff(class TemplateClass, delegate<ModifyTemplate> ModifyTemplateFn)
 {
