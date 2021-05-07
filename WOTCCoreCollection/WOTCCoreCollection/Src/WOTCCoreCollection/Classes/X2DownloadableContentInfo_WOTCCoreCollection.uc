@@ -13,6 +13,62 @@ static event OnPostTemplatesCreated()
 	ModifyTemplateAllDiff('ConstantLowCover', class'X2AbilityTemplate', PatchCoverGenerationAbility);
 	ModifyTemplateAllDiff('Bulwark', class'X2AbilityTemplate', PatchCoverGenerationAbility);
 	ModifyTemplateAllDiff('HighCoverGenerator', class'X2AbilityTemplate', PatchCoverGenerationAbility);
+
+	ModifyTemplateAllDiff('HighCoverGenerator', class'X2AbilityTemplate', PatchHackRewardAbility);
+
+	// Issue #13
+	PatchHackRewardAbilities();
+}
+
+// Start Issue #13
+static final function PatchHackRewardAbilities()
+{
+	local X2HackRewardTemplateManager	Mgr;
+	local X2DataTemplate				DataTemplate;
+	local X2HackRewardTemplate			HackRewardTemplate;
+
+	Mgr = class'X2HackRewardTemplateManager'.static.GetHackRewardTemplateManager();
+	foreach Mgr.IterateTemplates(DataTemplate)
+	{
+		HackRewardTemplate = X2HackRewardTemplate(DataTemplate);
+		if (HackRewardTemplate.AbilityTemplateName != '')
+		{
+			ModifyTemplateAllDiff(HackRewardTemplate.AbilityTemplateName, class'X2AbilityTemplate', PatchHackRewardAbility);
+		}
+	}
+}
+
+static function PatchHackRewardAbility(X2DataTemplate DataTemplate)
+{
+	local X2AbilityTemplate Template;
+	local int i;
+
+	Template = X2AbilityTemplate(DataTemplate);
+	
+	for (i = 0; i < Template.AbilityTriggers.Length; i++)
+	{
+		if (X2AbilityTrigger_EventListener(Template.AbilityTriggers[i]) != none &&
+			X2AbilityTrigger_EventListener(Template.AbilityTriggers[i]).ListenerData.EventID == class'X2HackRewardTemplateManager'.default.HackAbilityEventName &&
+			string(X2AbilityTrigger_EventListener(Template.AbilityTriggers[i]).ListenerData.EventFn) == "XComGame.Default__XComGameState_Ability.AbilityTriggerEventListener_Self")
+		{
+			`LOG("Patching Event Listener Trigger for Hack Reward Ability:" @ Template.LocFriendlyName @ "(" $ Template.DataName $ ")",, 'CCMM');
+			X2AbilityTrigger_EventListener(Template.AbilityTriggers[i]).ListenerData.EventFn = static.AbilityTriggerEventListener_HackReward;
+		}
+	}
+}
+// End Issue #13
+
+static function EventListenerReturn AbilityTriggerEventListener_HackReward(Object EventData, Object EventSource, XComGameState GameState, name InEventID, Object CallbackData)
+{
+    local XComGameState_Ability AbilityState;
+		
+	AbilityState = XComGameState_Ability(CallbackData);
+	if (AbilityState != none && GameState.GetGameStateForObjectID(AbilityState.ObjectID) != none)
+	{
+		AbilityState.AbilityTriggerAgainstSingleTarget(AbilityState.OwnerStateObject, false);
+	}	
+
+    return ELR_NoInterrupt;
 }
 
 // Begin Issue #8
