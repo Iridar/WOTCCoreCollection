@@ -18,7 +18,42 @@ static event OnPostTemplatesCreated()
 
 	// Issue #13
 	PatchHackRewardAbilities();
+
+	// Issue #14
+	ModifyTemplateAllDiff('StabilizeMedkitOwner', class'X2AbilityTemplate', PatchStabilizeMe);
 }
+
+// Start Issue #14
+static final function PatchStabilizeMe(X2DataTemplate DataTemplate)
+{
+	local X2AbilityTemplate			Template;
+	local X2Condition_Visibility	Visibility;
+	local int i;
+
+	Template = X2AbilityTemplate(DataTemplate);
+
+	for (i = Template.AbilityTargetConditions.Length - 1; i >= 0; i--)
+	{
+		if (Template.AbilityTargetConditions[i].Class.Name == 'X2Condition_StabilizeMedkitOwner')
+		{
+			Template.AbilityTargetConditions[i] = new class'X2Condition_TargetHasMedikit';
+			break;
+		}
+	}
+
+	Visibility = new class'X2Condition_Visibility';
+	Visibility.bRequireGameplayVisible = true;
+	Visibility.bRequireBasicVisibility = true;
+	Template.AbilityTargetConditions.AddItem(Visibility);
+
+	// Original BuildGameStateFn uses the same loggy spammy function as the X2Condition_StabilizeMedkitOwner.
+	// Replace custom function with standard one, and instead use an X2Effect to apply the cost.
+	Template.BuildNewGameStateFn = class'X2Ability'.static.TypicalAbility_BuildGameState;
+
+	Template.AddTargetEffect(new class'X2Effect_ApplyMedikitChargeCost');
+}
+
+// End Issue #14
 
 // Start Issue #13
 static final function PatchHackRewardAbilities()
@@ -38,7 +73,7 @@ static final function PatchHackRewardAbilities()
 	}
 }
 
-static function PatchHackRewardAbility(X2DataTemplate DataTemplate)
+static final function PatchHackRewardAbility(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate Template;
 	local int i;
@@ -58,7 +93,7 @@ static function PatchHackRewardAbility(X2DataTemplate DataTemplate)
 }
 // End Issue #13
 
-static function EventListenerReturn AbilityTriggerEventListener_HackReward(Object EventData, Object EventSource, XComGameState GameState, name InEventID, Object CallbackData)
+static final function EventListenerReturn AbilityTriggerEventListener_HackReward(Object EventData, Object EventSource, XComGameState GameState, name InEventID, Object CallbackData)
 {
     local XComGameState_Ability AbilityState;
 		
@@ -72,7 +107,7 @@ static function EventListenerReturn AbilityTriggerEventListener_HackReward(Objec
 }
 
 // Begin Issue #8
-static function PatchCoverGenerationAbility(X2DataTemplate DataTemplate)
+static final function PatchCoverGenerationAbility(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate			Template;
 	local X2Effect					Effect;
@@ -106,7 +141,7 @@ static function PatchCoverGenerationAbility(X2DataTemplate DataTemplate)
 	}
 }
 
-static function CoverGeneratorEffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)
+static final function CoverGeneratorEffectRemoved(X2Effect_Persistent PersistentEffect, const out EffectAppliedData ApplyEffectParameters, XComGameState NewGameState, bool bCleansed)
 {
 	local XComGameState_Unit UnitState;
 
@@ -116,7 +151,7 @@ static function CoverGeneratorEffectRemoved(X2Effect_Persistent PersistentEffect
 }
 // End Issue #8
 
-static function PatchOverwatchAllMod()
+static final function PatchOverwatchAllMod()
 {
 	local X2CharacterTemplateManager	CharMgr;
 	local array<name>					AllTemplateNames;
@@ -157,7 +192,7 @@ static function PatchOverwatchAllMod()
 }
 
 // Begin Issue #1
-static function PatchOverwatchOthersAbilityTemplate(X2DataTemplate DataTemplate)
+static final function PatchOverwatchOthersAbilityTemplate(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate				Template;
 	local X2AbilityCost					AbilityCost;
@@ -178,7 +213,7 @@ static function PatchOverwatchOthersAbilityTemplate(X2DataTemplate DataTemplate)
 	}
 }
 
-static function PatchOverwatchAllAbilityTemplate(X2DataTemplate DataTemplate)
+static final function PatchOverwatchAllAbilityTemplate(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate				Template;
 	local X2AbilityCost					AbilityCost;
@@ -397,4 +432,38 @@ static private function X2DownloadableContentInfo_WOTCCoreCollection GetCDO()
 protected function CallModifyTemplateFn(delegate<ModifyTemplate> ModifyTemplateFn, X2DataTemplate DataTemplate)
 {
     ModifyTemplateFn(DataTemplate);
+}
+
+
+exec function ResetBondForSelectedSoldier()
+{
+    local XComGameStateHistory                History;
+    local UIArmory                            Armory;
+    local StateObjectReference                UnitRef;
+    local XComGameState_Unit                UnitState;
+    local XComGameState                        NewGameState;
+
+    Armory = UIArmory(`SCREENSTACK.GetFirstInstanceOf(class'UIArmory'));
+    if (Armory == none)
+    {
+        class'Helpers'.static.OutputMsg("No unit selected");
+        return;
+    }
+
+    UnitRef = Armory.GetUnitRef();
+    History = `XCOMHISTORY;
+    UnitState = XComGameState_Unit(History.GetGameStateForObjectID(UnitRef.ObjectID));
+    if (UnitState == none)
+    {
+        class'Helpers'.static.OutputMsg("No unit selected");
+        return;
+    }
+    
+    NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Levelup Soldier");
+    UnitState = XComGameState_Unit(NewGameState.ModifyStateObject(UnitState.Class, UnitState.ObjectID));
+    class'X2StrategyGameRulesetDataStructures'.static.ResetAllBonds(NewGameState, UnitState);
+    `XCOMGAME.GameRuleset.SubmitGameState(NewGameState);
+
+    class'Helpers'.static.OutputMsg("Bond reset successfully");
+    Armory.PopulateData();
 }

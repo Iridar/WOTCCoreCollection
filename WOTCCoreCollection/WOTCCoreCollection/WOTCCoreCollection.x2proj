@@ -19,7 +19,7 @@ tags= war of the chosen</Description>
     <Folder Include="Src\WOTCCoreCollection\Classes\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\XComCoreCollection.ini">
+    <Content Include="Config\XComGameCore.ini">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Config\XComUIModificationWOTC.ini">
@@ -43,7 +43,13 @@ tags= war of the chosen</Description>
     <Content Include="Src\WOTCCoreCollection\Classes\UIScreen_Dummy.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\WOTCCoreCollection\Classes\X2Condition_TargetHasMedikit.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\WOTCCoreCollection\Classes\X2DownloadableContentInfo_WOTCCoreCollection.uc" />
+    <Content Include="Src\WOTCCoreCollection\Classes\X2Effect_ApplyMedikitChargeCost.uc">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
 </Project>
