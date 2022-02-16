@@ -19,11 +19,11 @@ static event OnPostTemplatesCreated()
 	// Issue #13
 	PatchHackRewardAbilities();
 
-	// Issue #14
+	// Issue #15
 	ModifyTemplateAllDiff('StabilizeMedkitOwner', class'X2AbilityTemplate', PatchStabilizeMe);
 }
 
-// Start Issue #14
+// Start Issue #15
 static final function PatchStabilizeMe(X2DataTemplate DataTemplate)
 {
 	local X2AbilityTemplate			Template;
@@ -52,8 +52,7 @@ static final function PatchStabilizeMe(X2DataTemplate DataTemplate)
 
 	Template.AddTargetEffect(new class'X2Effect_ApplyMedikitChargeCost');
 }
-
-// End Issue #14
+// End Issue #15
 
 // Start Issue #13
 static final function PatchHackRewardAbilities()

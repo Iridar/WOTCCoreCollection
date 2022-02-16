@@ -1,6 +1,6 @@
 class X2Condition_TargetHasMedikit extends X2Condition;
 
-// Issue #14 - used to replace the original X2Condition_StabilizeMedkitOwner condition, which has a log of log spam.
+// Issue #15 - used to replace the original X2Condition_StabilizeMedkitOwner condition, which has a log of log spam.
 // Also it looks for any ability that can remove bleeding effect rather than for Stabilize by name, which is weird and unnecessary.
 
 event name CallMeetsCondition(XComGameState_BaseObject kTarget) 

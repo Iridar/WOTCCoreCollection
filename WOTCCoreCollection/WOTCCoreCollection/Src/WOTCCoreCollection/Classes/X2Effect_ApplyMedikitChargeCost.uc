@@ -1,5 +1,7 @@
 class X2Effect_ApplyMedikitChargeCost extends X2Effect;
 
+// Issue #15
+
 simulated protected function OnEffectAdded(const out EffectAppliedData ApplyEffectParameters, XComGameState_BaseObject kNewTargetState, XComGameState NewGameState, XComGameState_Effect NewEffectState)
 {
 	local XComGameState_Unit	TargetUnit;
