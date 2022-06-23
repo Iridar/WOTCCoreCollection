@@ -160,17 +160,18 @@ static final function PatchOverwatchAllMod()
 	local X2CharacterTemplate			CharTemplate;
 	local UIScreenListener				UISL_CDO;
 
-	// Begin Issue #1
-	ModifyTemplateAllDiff('OverwatchOthers', class'X2AbilityTemplate', PatchOverwatchOthersAbilityTemplate);
-	ModifyTemplateAllDiff('OverwatchAll', class'X2AbilityTemplate', PatchOverwatchAllAbilityTemplate);
-	// End Issue #1
-
 	// Begin Issue #4
 	UISL_CDO = UIScreenListener(class'XComEngine'.static.GetClassDefaultObjectByName('UIScreenListener_TacticalHUD_OverwatchAllWotC'));
 	if (UISL_CDO != none)
 	{
 		UISL_CDO.ScreenClass = class'UIScreen_Dummy';
 	}
+	else return;  // Exit if there's no UISL, meaning there is no OverwatchAll mod active.
+
+	// Begin Issue #1
+	ModifyTemplateAllDiff('OverwatchOthers', class'X2AbilityTemplate', PatchOverwatchOthersAbilityTemplate);
+	ModifyTemplateAllDiff('OverwatchAll', class'X2AbilityTemplate', PatchOverwatchAllAbilityTemplate);
+	// End Issue #1
 
 	CharMgr = class'X2CharacterTemplateManager'.static.GetCharacterTemplateManager();
 	CharMgr.GetTemplateNames(AllTemplateNames);
