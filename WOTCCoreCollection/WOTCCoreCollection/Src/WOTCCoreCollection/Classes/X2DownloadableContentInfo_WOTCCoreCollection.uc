@@ -1,5 +1,7 @@
 class X2DownloadableContentInfo_WOTCCoreCollection extends X2DownloadableContentInfo;
 
+var private config(Content) array<name> FixClothPhysicsForThighs;
+
 delegate ModifyTemplate(X2DataTemplate DataTemplate);
 
 static event OnPostTemplatesCreated()
@@ -22,6 +24,28 @@ static event OnPostTemplatesCreated()
 	// Issue #15
 	ModifyTemplateAllDiff('StabilizeMedkitOwner', class'X2AbilityTemplate', PatchStabilizeMe);
 }
+
+// Start Issue #16
+static function UpdateAnimations(out array<AnimSet> CustomAnimSets, XComGameState_Unit UnitState, XComUnitPawn Pawn)
+{
+	if (!Pawn.m_bHasFullAnimWeightBones && default.FixClothPhysicsForThighs.Find(UnitState.kAppearance.nmThighs) != INDEX_NONE)
+	{
+		//Pawn.m_bHasFullAnimWeightBones = true;
+		Pawn.Mesh.bEnableFullAnimWeightBodies = true;
+		Pawn.Mesh.PhysicsWeight = 0;
+		Pawn.Mesh.SetHasPhysicsAssetInstance(TRUE);
+		Pawn.Mesh.bUpdateKinematicBonesFromAnimation=true;
+		Pawn.Mesh.SetBlockRigidBody(true);
+		Pawn.Mesh.SetRBChannel(RBCC_Pawn);		
+		Pawn.Mesh.SetRBCollidesWithChannel(RBCC_Default,TRUE);
+		Pawn.Mesh.SetRBCollidesWithChannel(RBCC_Pawn,TRUE);
+		Pawn.Mesh.SetRBCollidesWithChannel(RBCC_Vehicle,TRUE);
+		Pawn.Mesh.SetRBCollidesWithChannel(RBCC_Clothing, TRUE);
+		Pawn.Mesh.SetRBCollidesWithChannel(RBCC_ClothingCollision, TRUE);
+		Pawn.Mesh.PhysicsAssetInstance.SetFullAnimWeightBonesFixed(false, Pawn.Mesh);
+	}
+}
+// End Issue #16
 
 // Start Issue #15
 static final function PatchStabilizeMe(X2DataTemplate DataTemplate)
