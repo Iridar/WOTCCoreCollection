@@ -4,3 +4,4 @@
 
 # Project specific user settings
 .vscode/settings.json
+BuildCache/
