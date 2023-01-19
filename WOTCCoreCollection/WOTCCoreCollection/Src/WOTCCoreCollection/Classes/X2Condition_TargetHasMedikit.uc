@@ -8,25 +8,23 @@ event name CallMeetsCondition(XComGameState_BaseObject kTarget)
 	local XComGameState_Unit	TargetUnit;
 	local StateObjectReference	AbilityRef;
 	local XComGameState_Ability AbilityState;
-	local XComGameStateHistory	History;
 
 	TargetUnit = XComGameState_Unit(kTarget);
 	if (TargetUnit == none)
 		return 'AA_NotAUnit';
 
-	History = `XCOMHISTORY;
-
-	AbilityRef = TargetUnit.FindAbility('GremlinStabilize');
+	AbilityRef = TargetUnit.FindAbility('MedikitStabilize');
 	if (AbilityRef.ObjectID != 0)
 	{
-		AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(AbilityRef.ObjectID));
+		AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(AbilityRef.ObjectID));
 	}
+	
 	if (AbilityState == none)
 	{
-		AbilityRef = TargetUnit.FindAbility('MedikitStabilize');
+		AbilityRef = TargetUnit.FindAbility('GremlinStabilize');
 		if (AbilityRef.ObjectID != 0)
 		{
-			AbilityState = XComGameState_Ability(History.GetGameStateForObjectID(AbilityRef.ObjectID));
+			AbilityState = XComGameState_Ability(`XCOMHISTORY.GetGameStateForObjectID(AbilityRef.ObjectID));
 		}
 	}
 

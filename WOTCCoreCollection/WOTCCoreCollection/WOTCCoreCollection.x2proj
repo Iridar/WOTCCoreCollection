@@ -9,11 +9,12 @@ tags= war of the chosen</Description>
     <SteamPublishID>0</SteamPublishID>
     <AssemblyName>WOTCCoreCollection</AssemblyName>
     <RootNamespace>WOTCCoreCollection</RootNamespace>
+    <ProjectGuid>{d5aa0f64-435a-4e4d-bc43-7a3fff06feaa}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Config\" />
     <Folder Include="Localization\" />
-    <Folder Include="Content" />
+    <Folder Include="ContentForCook" />
     <Folder Include="Src\" />
     <Folder Include="Src\WOTCCoreCollection\" />
     <Folder Include="Src\WOTCCoreCollection\Classes\" />
@@ -31,7 +32,10 @@ tags= war of the chosen</Description>
     <Content Include="Config\XComUIModificationWOTC.ini">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Content\IRI_CC_OverwatchAll.upk">
+    <Content Include="ContentForCook\IRI_CC_OverwatchAll.upk">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ContentOptions.json">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Localization\RemoveWeaponUpgradesWOTC.cht">
@@ -57,5 +61,10 @@ tags= war of the chosen</Description>
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildLocalExtensionPath)\XCOM2.targets" />
+  <PropertyGroup>
+    <SolutionRoot>$(MSBuildProjectDirectory)\..\</SolutionRoot>
+    <ScriptsDir>$(SolutionRoot).scripts\</ScriptsDir>
+    <BuildCommonRoot>$(ScriptsDir)X2ModBuildCommon\</BuildCommonRoot>
+  </PropertyGroup>
+  <Import Project="$(BuildCommonRoot)XCOM2.targets" />
 </Project>

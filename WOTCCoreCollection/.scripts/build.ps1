@@ -11,6 +11,7 @@ Write-Host "Sourcing $common"
 . ($common)
 
 $builder = [BuildProject]::new("WOTCCoreCollection", $srcDirectory, $sdkPath, $gamePath)
+$builder.IncludeSrc("$srcDirectory\X2WOTCCommunityHighlander\X2WOTCCommunityHighlander\Src")
 
 switch ($config)
 {
@@ -24,4 +25,5 @@ switch ($config)
     default { ThrowFailure "Unknown build configuration $config" }
 }
 
+$builder.SetContentOptionsJsonFilename("ContentOptions.json")
 $builder.InvokeBuild()
