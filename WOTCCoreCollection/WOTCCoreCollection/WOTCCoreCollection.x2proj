@@ -53,6 +53,9 @@ tags= war of the chosen</Description>
     <Content Include="Src\WOTCCoreCollection\Classes\UIScreen_Dummy.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\WOTCCoreCollection\Classes\X2Action_SyncVisualizer_Override.uc">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Src\WOTCCoreCollection\Classes\X2Condition_TargetHasMedikit.uc">
       <SubType>Content</SubType>
     </Content>
