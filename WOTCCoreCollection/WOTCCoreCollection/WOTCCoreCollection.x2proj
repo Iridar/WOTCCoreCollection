@@ -63,6 +63,9 @@ tags= war of the chosen</Description>
     <Content Include="Src\WOTCCoreCollection\Classes\X2Effect_ApplyMedikitChargeCost.uc">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Src\WOTCCoreCollection\Classes\X2EventListener_CoreCollection.uc">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <SolutionRoot>$(MSBuildProjectDirectory)\..\</SolutionRoot>
