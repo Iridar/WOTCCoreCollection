@@ -5,8 +5,6 @@ function SyncVisualizer()
 {
 	local X2VisualizedInterface VisualizedObject;
 
-	`LOG("Running for:" @ Metadata.StateObject_NewState.Class.Name @ Metadata.StateObject_NewState.ObjectID @ Metadata.StateObject_NewState.bRemoved,, 'IRIVIS');
-
 	VisualizedObject = X2VisualizedInterface(Metadata.StateObject_NewState);
 	if (VisualizedObject != none && !Metadata.StateObject_NewState.bRemoved) // Don't SyncVis for removed state objects.
 	{

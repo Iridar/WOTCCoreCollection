@@ -43,6 +43,7 @@ static private function EventListenerReturn OnEvacZoneDestroyed(Object EventData
 	EvacState = XComGameState_EvacZone(EventData);
 	if (EvacState != none)
 	{
+		`LOG("Evac Zone destroyed, removing Evac Zone state object.",, 'CCMM');
 		NewGameState = class'XComGameStateContext_ChangeContainer'.static.CreateChangeState("Remove Evac State for destroyed Evac Zone");
 		NewGameState.RemoveStateObject(EvacState.ObjectID);
 		`GAMERULES.SubmitGameState(NewGameState);
