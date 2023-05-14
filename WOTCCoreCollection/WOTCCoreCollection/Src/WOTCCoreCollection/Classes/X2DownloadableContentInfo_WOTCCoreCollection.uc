@@ -23,6 +23,9 @@ static event OnPostTemplatesCreated()
 
 	// Issue #15
 	ModifyTemplateAllDiff('StabilizeMedkitOwner', class'X2AbilityTemplate', PatchStabilizeMe);
+
+	// Issue #21
+	PatchTrainingCenterAbilitiesForSharpshooters();
 }
 
 // Start Issue #16
@@ -115,6 +118,75 @@ static final function PatchHackRewardAbility(X2DataTemplate DataTemplate)
 	}
 }
 // End Issue #13
+
+// Start Issue #21
+static final function PatchTrainingCenterAbilitiesForSharpshooters()
+{
+	local X2AbilityTemplateManager	AbilityTemplateManager;
+	local X2AbilityTemplate			AbilityTemplate;
+	local X2Effect_Guardian			GuardianEffect;
+	local X2Effect					Effect;
+
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('HailOfBullets');
+	if (AbilityTemplate != none)
+		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('BulletShred');
+	if (AbilityTemplate != none)
+		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('ChainShot');
+	if (AbilityTemplate != none)
+		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('RapidFire');
+	if (AbilityTemplate != none)
+		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('Sentinel');
+	if (AbilityTemplate != none)
+	{
+		foreach AbilityTemplate.AbilityTargetEffects(Effect)
+		{
+			GuardianEffect = X2Effect_Guardian(Effect);	
+			if (GuardianEffect == none)
+				continue;
+
+			GuardianEffect.AllowedAbilities.AddItem('LongWatchShot');
+		}
+	}
+}
+static final function PatchTrainingCenterAbilityForSharpshooters(out X2AbilityTemplate AbilityTemplate)
+{
+	local X2Condition_Visibility		VisibilityCondition;
+	local X2AbilityCost_ActionPoints	ActionCost;
+	local X2AbilityCost					Cost;
+	local X2Condition					Condition;
+
+	foreach AbilityTemplate.AbilityCosts(Cost)
+	{
+		ActionCost = X2AbilityCost_ActionPoints(Cost);
+		if (ActionCost == none)
+			continue;
+
+		ActionCost.iNumPoints = 0;
+		ActionCost.bAddWeaponTypicalCost = true;
+		break;
+	}
+
+	foreach AbilityTemplate.AbilityTargetConditions(Condition)
+	{
+		VisibilityCondition = X2Condition_Visibility(Condition);
+		if (VisibilityCondition == none)
+			continue;
+
+		VisibilityCondition.bAllowSquadsight = true;
+		break;
+	}
+}
+// End Issue #21
 
 static final function EventListenerReturn AbilityTriggerEventListener_HackReward(Object EventData, Object EventSource, XComGameState GameState, name InEventID, Object CallbackData)
 {
