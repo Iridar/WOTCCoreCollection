@@ -125,15 +125,12 @@ static final function PatchTrainingCenterAbilitiesForSharpshooters()
 	local X2AbilityTemplateManager	AbilityTemplateManager;
 	local X2AbilityTemplate			AbilityTemplate;
 	local X2Effect_Guardian			GuardianEffect;
+	local X2Effect_CoveringFire		CoveringFireEffect;
 	local X2Effect					Effect;
 
 	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
 
 	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('HailOfBullets');
-	if (AbilityTemplate != none)
-		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
-
-	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('BulletShred');
 	if (AbilityTemplate != none)
 		PatchTrainingCenterAbilityForSharpshooters(AbilityTemplate);
 
@@ -157,24 +154,24 @@ static final function PatchTrainingCenterAbilitiesForSharpshooters()
 			GuardianEffect.AllowedAbilities.AddItem('LongWatchShot');
 		}
 	}
+
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('LongWatch');
+	if (AbilityTemplate != none)
+	{
+		foreach AbilityTemplate.AbilityTargetEffects(Effect)
+		{
+			CoveringFireEffect = X2Effect_CoveringFire(Effect);	
+			if (CoveringFireEffect == none)
+				continue;
+
+			CoveringFireEffect.AbilityToActivate = 'LongWatchShot';
+		}
+	}
 }
 static final function PatchTrainingCenterAbilityForSharpshooters(out X2AbilityTemplate AbilityTemplate)
 {
 	local X2Condition_Visibility		VisibilityCondition;
-	local X2AbilityCost_ActionPoints	ActionCost;
-	local X2AbilityCost					Cost;
 	local X2Condition					Condition;
-
-	foreach AbilityTemplate.AbilityCosts(Cost)
-	{
-		ActionCost = X2AbilityCost_ActionPoints(Cost);
-		if (ActionCost == none)
-			continue;
-
-		ActionCost.iNumPoints = 0;
-		ActionCost.bAddWeaponTypicalCost = true;
-		break;
-	}
 
 	foreach AbilityTemplate.AbilityTargetConditions(Condition)
 	{
