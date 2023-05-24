@@ -174,15 +174,23 @@ static final function PatchTrainingCenterAbilitiesForSharpshooters()
 static final function PatchTrainingCenterAbilityForSharpshooters(out X2AbilityTemplate AbilityTemplate)
 {
 	local X2Condition_Visibility		VisibilityCondition;
-	local X2Condition					Condition;
+	local X2Condition_Visibility		NewVisibilityCondition;
+	local int i;
 
-	foreach AbilityTemplate.AbilityTargetConditions(Condition)
+	for (i = 0; i < AbilityTemplate.AbilityTargetConditions.Length; i++)
 	{
-		VisibilityCondition = X2Condition_Visibility(Condition);
+		VisibilityCondition = X2Condition_Visibility(AbilityTemplate.AbilityTargetConditions[i]);
 		if (VisibilityCondition == none)
 			continue;
 
-		VisibilityCondition.bAllowSquadsight = true;
+		NewVisibilityCondition = new class'X2Condition_Visibility'(VisibilityCondition);
+
+		NewVisibilityCondition.bAllowSquadsight = true;
+
+		// Have to specifically replace the old condition rather than patch the old one, 
+		// otherwise the change will affect all abilities using that instance of the condition.
+		// Would be patching default.GameplayVisibilityCondition essentially.
+		AbilityTemplate.AbilityTargetConditions[i] = NewVisibilityCondition;
 		break;
 	}
 }
