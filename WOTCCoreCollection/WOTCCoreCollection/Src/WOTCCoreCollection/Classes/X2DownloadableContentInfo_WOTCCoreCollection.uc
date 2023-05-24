@@ -26,6 +26,9 @@ static event OnPostTemplatesCreated()
 
 	// Issue #21
 	PatchTrainingCenterAbilitiesForSharpshooters();
+
+	// Issue #22
+	ModifyTemplateAllDiff('AlienGrenade', class'X2ItemTemplate', PatchPlasmaGrenadeIcon);
 }
 
 // Start Issue #16
@@ -375,6 +378,18 @@ static function bool GetValidFloorSpawnLocations(out array<Vector> FloorPoints, 
 }
 // End Issue #12
 
+// Start Issue #22
+static private function PatchPlasmaGrenadeIcon(X2DataTemplate DataTemplate)
+{
+	local X2ItemTemplate ItemTemplate;
+
+	ItemTemplate = X2ItemTemplate(DataTemplate);
+	if (ItemTemplate == none)
+		return;
+
+	ItemTemplate.strImage = "img:///IRI_CC_OverwatchAll.Inv_Plasma_GrenadeFIX";
+}
+// End Issue #22
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	HELPER FUNCTIONS
