@@ -29,6 +29,12 @@ static event OnPostTemplatesCreated()
 
 	// Issue #22
 	ModifyTemplateAllDiff('AlienGrenade', class'X2ItemTemplate', PatchPlasmaGrenadeIcon);
+
+	// Issue #23
+	if (IsModActive('ScanningProtocolFix'))
+	{
+		FixScanningProtocolFix();
+	}
 }
 
 // Start Issue #16
@@ -398,6 +404,36 @@ static private function PatchPlasmaGrenadeIcon(X2DataTemplate DataTemplate)
 	ItemTemplate.strImage = "img:///IRI_CC_OverwatchAll.Inv_Plasma_GrenadeFIX";
 }
 // End Issue #22
+
+// Start Issue #23
+static private function FixScanningProtocolFix()
+{
+	local X2AbilityTemplate			AbilityTemplate;
+	local X2AbilityTemplateManager	AbilityTemplateManager;
+	local X2Effect_ScanningProtocol	ScanningProtocol;
+	local X2Effect					Effect;
+
+	AbilityTemplateManager = class'X2AbilityTemplateManager'.static.GetAbilityTemplateManager();
+	AbilityTemplate = AbilityTemplateManager.FindAbilityTemplate('ScanningProtocol');
+	if (AbilityTemplate == none)
+		return;
+
+	foreach AbilityTemplate.AbilityMultiTargetEffects(Effect)
+	{
+		ScanningProtocol = X2Effect_ScanningProtocol(Effect);
+		if (ScanningProtocol == none)
+			continue;
+
+		ScanningProtocol.bDisplayInUI = true;
+		ScanningProtocol.BuffCategory = ePerkBuff_Penalty;
+		ScanningProtocol.FriendlyName = AbilityTemplate.LocFriendlyName;
+		ScanningProtocol.FriendlyDescription = AbilityTemplate.GetMyHelpText();
+		ScanningProtocol.IconImage = AbilityTemplate.IconImage;
+		ScanningProtocol.AbilitySourceName = AbilityTemplate.AbilitySourceName;
+	}	
+}
+// End Issue #23
+
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	HELPER FUNCTIONS
@@ -582,4 +618,22 @@ exec function ResetBondForSelectedSoldier()
 
     class'Helpers'.static.OutputMsg("Bond reset successfully");
     Armory.PopulateData();
+}
+
+
+static final function bool IsModActive(name ModName)
+{
+    local XComOnlineEventMgr    EventManager;
+    local int                   Index;
+
+    EventManager = `ONLINEEVENTMGR;
+
+    for (Index = EventManager.GetNumDLC() - 1; Index >= 0; Index--) 
+    {
+        if (EventManager.GetDLCNames(Index) == ModName) 
+        {
+            return true;
+        }
+    }
+    return false;
 }
