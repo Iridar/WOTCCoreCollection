@@ -15,6 +15,7 @@ tags= war of the chosen</Description>
     <Folder Include="Config\" />
     <Folder Include="Localization\" />
     <Folder Include="ContentForCook" />
+    <Folder Include="Localization\DLC3" />
     <Folder Include="Src\" />
     <Folder Include="Src\WOTCCoreCollection\" />
     <Folder Include="Src\WOTCCoreCollection\Classes\" />
@@ -36,6 +37,39 @@ tags= war of the chosen</Description>
       <SubType>Content</SubType>
     </Content>
     <Content Include="ContentOptions.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.chn">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.cht">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.deu">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.esn">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.fra">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.int">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.ita">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.jpn">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.kor">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.pol">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Localization\DLC3\DLC_3.rus">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Localization\RemoveWeaponUpgradesWOTC.cht">
