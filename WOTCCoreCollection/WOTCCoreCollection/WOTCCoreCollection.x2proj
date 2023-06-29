@@ -21,9 +21,6 @@ tags= war of the chosen</Description>
     <Folder Include="Src\WOTCCoreCollection\Classes\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\XComCamera.ini">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Config\XComContent.ini">
       <SubType>Content</SubType>
     </Content>
