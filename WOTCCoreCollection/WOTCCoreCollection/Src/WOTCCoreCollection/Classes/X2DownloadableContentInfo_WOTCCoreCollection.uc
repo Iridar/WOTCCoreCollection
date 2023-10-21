@@ -1,6 +1,7 @@
 class X2DownloadableContentInfo_WOTCCoreCollection extends X2DownloadableContentInfo;
 
 var private config(Content) array<name> FixClothPhysicsForThighs;
+var private config bool bDisableSkulljackFix;
 
 delegate ModifyTemplate(X2DataTemplate DataTemplate);
 
@@ -34,6 +35,13 @@ static event OnPostTemplatesCreated()
 	if (IsModActive('ScanningProtocolFix'))
 	{
 		FixScanningProtocolFix();
+	}
+
+	// Issue #26
+	if (!default.bDisableSkulljackFix)
+	{
+		ModifyTemplateAllDiff('SKULLJACKAbility', class'X2AbilityTemplate', PatchSkulljackAbility);
+		ModifyTemplateAllDiff('SKULLMINEAbility', class'X2AbilityTemplate', PatchSkullmineAbility);
 	}
 }
 
@@ -433,6 +441,62 @@ static private function FixScanningProtocolFix()
 	}	
 }
 // End Issue #23
+
+// Start Issue #26
+// Vanilla uses trademark Firaxis noodle code approach of using the same condition for two different abilities.
+// I separated this into two conditions and integrated community fixes from:
+// [WOTC] Skulljack Mind-Controlled Enemies https://steamcommunity.com/sharedfiles/filedetails/?id=2230952627
+// Codex Skulljack Fix https://steamcommunity.com/sharedfiles/filedetails/?id=929030780
+// and optimized the condition code to improve performance.
+// As a side effect, Skulljack will no longer appear when it's no longer relevant to the story.
+static private function PatchSkulljackAbility(X2DataTemplate DataTemplate)
+{
+	local X2Condition_Skulljack Condition;
+	local X2AbilityTemplate Template;
+	local int i;
+
+	Template = X2AbilityTemplate(DataTemplate);
+
+	for (i = Template.AbilityTargetConditions.Length - 1; i >= 0; i--)
+	{
+		if (Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTarget') ||
+			Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTargetFix') ||
+			Template.AbilityTargetConditions[i].IsA('X2Condition_ModLanceTarget'))
+		{
+			`LOG("Removing Skulljack condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'IRITEST');
+			Template.AbilityTargetConditions.Remove(i, 1);
+		}
+	}
+	Condition = new class'X2Condition_Skulljack';
+	Condition.FinalzeHackAbilityName = Template.FinalizeAbilityName;
+	Template.AbilityTargetConditions.AddItem(Condition);
+}
+
+static private function PatchSkullmineAbility(X2DataTemplate DataTemplate)
+{
+	local X2Condition_Skullmine Condition;
+	local X2AbilityTemplate Template;
+	local int i;
+
+	Template = X2AbilityTemplate(DataTemplate);
+
+	for (i = Template.AbilityTargetConditions.Length - 1; i >= 0; i--)
+	{
+		if (Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTarget') ||
+			Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTargetFix') ||
+			Template.AbilityTargetConditions[i].IsA('X2Condition_ModLanceTarget'))
+		{
+			`LOG("Removing Skulljack condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'IRITEST');
+			Template.AbilityTargetConditions.Remove(i, 1);
+		}
+	}
+
+	Condition = new class'X2Condition_Skullmine';
+	Condition.FinalzeHackAbilityName = Template.FinalizeAbilityName;
+	Template.AbilityTargetConditions.AddItem(Condition);
+}
+// End Issue #26
+
 
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
