@@ -16,8 +16,6 @@ function bool CanEverBeValid(XComGameState_Unit SourceUnit, bool bStrategyCheck)
 			XComHQ.GetObjectiveStatus('T1_M3_KillCodex') == eObjectiveState_InProgress				||
 			XComHQ.GetObjectiveStatus('T1_M5_SKULLJACKCodex') == eObjectiveState_InProgress			||
 			XComHQ.GetObjectiveStatus('T1_M6_KillAvatar') == eObjectiveState_InProgress;
-
-	return true;
 }
 
 event name CallMeetsCondition(XComGameState_BaseObject kTarget)

@@ -463,7 +463,7 @@ static private function PatchSkulljackAbility(X2DataTemplate DataTemplate)
 			Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTargetFix') ||
 			Template.AbilityTargetConditions[i].IsA('X2Condition_ModLanceTarget'))
 		{
-			`LOG("Removing Skulljack condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'IRITEST');
+			`LOG("Removing Skulljack condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'CCMM');
 			Template.AbilityTargetConditions.Remove(i, 1);
 		}
 	}
@@ -485,8 +485,8 @@ static private function PatchSkullmineAbility(X2DataTemplate DataTemplate)
 		if (Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTarget') ||
 			Template.AbilityTargetConditions[i].IsA('X2Condition_StasisLanceTargetFix') ||
 			Template.AbilityTargetConditions[i].IsA('X2Condition_ModLanceTarget'))
-		{
-			`LOG("Removing Skulljack condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'IRITEST');
+		{	
+			`LOG("Removing Skullmine condition:" @ Template.AbilityTargetConditions[i].Class.name,, 'CCMM');
 			Template.AbilityTargetConditions.Remove(i, 1);
 		}
 	}
