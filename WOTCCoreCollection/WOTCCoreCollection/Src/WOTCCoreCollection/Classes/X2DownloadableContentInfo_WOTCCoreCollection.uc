@@ -2,6 +2,7 @@ class X2DownloadableContentInfo_WOTCCoreCollection extends X2DownloadableContent
 
 var private config(Content) array<name> FixClothPhysicsForThighs;
 var private config bool bDisableSkulljackFix;
+var private config bool bSkipOverrideOverwatchAllOthersShotHUDPriority;
 
 delegate ModifyTemplate(X2DataTemplate DataTemplate);
 
@@ -319,7 +320,11 @@ static final function PatchOverwatchOthersAbilityTemplate(X2DataTemplate DataTem
 	Template = X2AbilityTemplate(DataTemplate);
 
 	Template.IconImage = "img:///IRI_CC_OverwatchAll.UIPerk_SmartOverwatchOthers";
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.PLACE_EVAC_PRIORITY + 2;
+
+	if (!default.bSkipOverrideOverwatchAllOthersShotHUDPriority)
+	{
+		Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.PLACE_EVAC_PRIORITY + 2;
+	}
 
 	foreach Template.AbilityCosts(AbilityCost)
 	{
@@ -339,7 +344,10 @@ static final function PatchOverwatchAllAbilityTemplate(X2DataTemplate DataTempla
 
 	Template = X2AbilityTemplate(DataTemplate);
 
-	Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.PLACE_EVAC_PRIORITY + 1;
+	if (!default.bSkipOverrideOverwatchAllOthersShotHUDPriority)
+	{
+		Template.ShotHUDPriority = class'UIUtilities_Tactical'.const.PLACE_EVAC_PRIORITY + 1;
+	}
 	Template.IconImage = "img:///IRI_CC_OverwatchAll.UIPerk_SmartOverwatchAll";
 
 	foreach Template.AbilityCosts(AbilityCost)
