@@ -25,5 +25,6 @@ switch ($config)
     default { ThrowFailure "Unknown build configuration $config" }
 }
 
+$builder.SetWorkshopID(2166295671)
 $builder.SetContentOptionsJsonFilename("ContentOptions.json")
 $builder.InvokeBuild()

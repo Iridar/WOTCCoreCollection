@@ -18,6 +18,7 @@ static event OnPostTemplatesCreated()
 	ModifyTemplateAllDiff('Bulwark', class'X2AbilityTemplate', PatchCoverGenerationAbility);
 	ModifyTemplateAllDiff('HighCoverGenerator', class'X2AbilityTemplate', PatchCoverGenerationAbility);
 
+	// TODO: This is probably not needed? See git history
 	ModifyTemplateAllDiff('HighCoverGenerator', class'X2AbilityTemplate', PatchHackRewardAbility);
 
 	// Issue #13
@@ -201,6 +202,7 @@ static final function PatchTrainingCenterAbilityForSharpshooters(out X2AbilityTe
 		NewVisibilityCondition = new class'X2Condition_Visibility'(VisibilityCondition);
 
 		NewVisibilityCondition.bAllowSquadsight = true;
+		NewVisibilityCondition.bRequireBasicVisibility = false;
 
 		// Have to specifically replace the old condition rather than patch the old one, 
 		// otherwise the change will affect all abilities using that instance of the condition.
